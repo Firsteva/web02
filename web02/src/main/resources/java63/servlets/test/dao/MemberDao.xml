@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="java02.test.dao.MemberDao">
+
+  <resultMap type="member" id="memberMap">
+    <id column="UID" property="id"/>
+    <result column="PWD" property="pwd"/>
+    <result column="EMAIL" property="mail"/>
+    <result column="UNAME" property="name"/>
+    <result column="TEL" property="tel"/>
+    <result column="FAX" property="fax"/>
+    <result column="DET_ADDR" property="adr"/>
+    <result column="PHOT" property="pht"/>
+    <result column="ANO" property="ano"/>
+  </resultMap>
+  
+  <sql id="memberSelect">
+    SELECT UID, PWD, EMAIL, UNAME, TEL, FAX, DET_ADDR, PHOT, ANO 
+    FROM MEMBERS
+  </sql>
+  
+  <select id="selectList" parameterType="map" resultMap="memberMap">
+    <include refid="memberSelect"/>
+    <if test="pageSize > 0">
+      limit #{startIndex}, #{pageSize}
+    </if>
+  </select>
+  
+  <select id="selectOne" parameterType="String" resultMap="memberMap">
+    <include refid="memberSelect"/> 
+    WHERE UID=#{value}
+  </select>
+  
+  <insert id="insert" parameterType="Member">
+    INSERT INTO MEMBERS(PWD, EMAIL, UNAME, TEL, FAX, DET_ADDR, PHOT, ANO) 
+    VALUES (#{pwd}, #{mail}, #{name}, #{tel}, #{fax}, #{adr}, #{pht}, #{ano})
+  </insert>
+  
+  <update id="update" parameterType="Member">
+    UPDATE MEMBERS SET 
+      PNAME=#{name},
+      QTY=#{quantity},
+      MKNO=#{makerNo} 
+      PWD=#{pwd}, EMAIL=#{mail}, UNAME=#{name}, TEL=#{tel}, FAX=#{fax}, 
+      DET_ADDR=#{adr}, PHOT=#{pht}, ANO=#{ano}
+    WHERE UID=#{id}
+  </update>
+  
+  <delete id="delete" parameterType="String">
+    DELETE FROM MEMBERS WHERE UID=#{value}
+  </delete>
+</mapper>
